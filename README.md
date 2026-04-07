@@ -1,5 +1,3 @@
-# 💕 Для Линчика
-
 A romantic single-page website with falling petals, ambient glow, and interactive sections.
 
 ## How to Deploy on GitHub Pages
