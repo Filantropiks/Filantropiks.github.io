@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Для Линчика ❤️</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Nunito:wght@300;400;600;700&display=swap"
+    rel="stylesheet">
+  <style>
+    *,
+    *::before,
+    *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --rose: #e8456b;
+      --rose-light: #ff7e9d;
+      --rose-glow: rgba(232, 69, 107, .35);
+      --blush: #ffd6e0;
+      --cream: #fff5f7;
+      --gold: #d4a853;
+      --gold-light: #f0d48a;
+      --deep: #1a0a10;
+      --deep2: #120710;
+      --glass: rgba(255, 255, 255, .06);
+      --glass-border: rgba(255, 255, 255, .1);
+    }
+
+    html {
+      scroll-behavior: smooth;
+      overflow-x: hidden;
+    }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: var(--deep);
+      color: #fff;
+      overflow-x: hidden;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    /* ───── Canvas petals ───── */
+    #petalsCanvas {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ───── Ambient glow blobs ───── */
+    .ambient {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(100px);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .amb1 {
+      width: 400px;
+      height: 400px;
+      background: rgba(232, 69, 107, .12);
+      top: -100px;
+      left: -100px;
+      animation: drift1 20s ease-in-out infinite;
+    }
+
+    .amb2 {
+      width: 350px;
+      height: 350px;
+      background: rgba(212, 168, 83, .08);
+      bottom: -80px;
+      right: -80px;
+      animation: drift2 25s ease-in-out infinite;
+    }
+
+    .amb3 {
+      width: 300px;
+      height: 300px;
+      background: rgba(232, 69, 107, .06);
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      animation: drift3 18s ease-in-out infinite;
+    }
+
+    @keyframes drift1 {
+
+      0%,
+      100% {
+        transform: translate(0, 0)
+      }
+
+      50% {
+        transform: translate(60px, 40px)
+      }
+    }
+
+    @keyframes drift2 {
+
+      0%,
+      100% {
+        transform: translate(0, 0)
+      }
+
+      50% {
+        transform: translate(-50px, -30px)
+      }
+    }
+
+    @keyframes drift3 {
+
+      0%,
+      100% {
+        transform: translate(-50%, -50%) scale(1)
+      }
+
+      50% {
+        transform: translate(-30%, -40%) scale(1.2)
+      }
+    }
+
+    /* ───── Sections ───── */
+    .section {
+      position: relative;
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 24px;
+      z-index: 1;
+    }
+
+    .section .inner {
+      opacity: 0;
+      transform: translateY(50px) scale(.97);
+      transition: opacity 1s cubic-bezier(.22, 1, .36, 1), transform 1s cubic-bezier(.22, 1, .36, 1);
+    }
+
+    .section.visible .inner {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    /* ───── Section 1 — Welcome ───── */
+    .s-welcome .inner {
+      text-align: center;
+    }
+
+    .s-welcome .greeting {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.4rem, 8vw, 4.5rem);
+      font-weight: 600;
+      line-height: 1.15;
+      color: var(--cream);
+      margin-bottom: 6px;
+    }
+
+    .s-welcome .greeting em {
+      font-style: italic;
+      background: linear-gradient(135deg, var(--rose-light), var(--gold-light));
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .s-welcome .sub {
+      font-size: .95rem;
+      color: rgba(255, 255, 255, .4);
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      margin-top: 12px;
+      animation: fadeUp 1.5s 1s both;
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(14px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* ───── Buttons ───── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 40px;
+      padding: 16px 44px;
+      border: 1px solid rgba(232, 69, 107, .35);
+      border-radius: 60px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      letter-spacing: .5px;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(135deg, rgba(232, 69, 107, .15), rgba(232, 69, 107, .05));
+      backdrop-filter: blur(20px);
+      color: var(--blush);
+      transition: all .4s cubic-bezier(.22, 1, .36, 1);
+      box-shadow: 0 4px 30px rgba(232, 69, 107, .12), inset 0 1px 0 rgba(255, 255, 255, .08);
+    }
+
+    .btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 60%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .1), transparent);
+      animation: btnShimmer 4s infinite;
+    }
+
+    @keyframes btnShimmer {
+      0% {
+        left: -100%
+      }
+
+      100% {
+        left: 200%
+      }
+    }
+
+    .btn:hover,
+    .btn:active {
+      background: linear-gradient(135deg, rgba(232, 69, 107, .3), rgba(232, 69, 107, .12));
+      border-color: rgba(232, 69, 107, .55);
+      box-shadow: 0 8px 40px rgba(232, 69, 107, .25), inset 0 1px 0 rgba(255, 255, 255, .12);
+      transform: translateY(-2px);
+    }
+
+    .btn:active {
+      transform: scale(.97);
+    }
+
+    /* ───── Section 2 — I love you ───── */
+    .s-love .inner {
+      text-align: center;
+    }
+
+    .s-love .heart-icon {
+      font-size: 72px;
+      display: inline-block;
+      animation: heartbeat 1.3s ease-in-out infinite;
+      filter: drop-shadow(0 0 20px rgba(232, 69, 107, .4));
+    }
+
+    @keyframes heartbeat {
+
+      0%,
+      100% {
+        transform: scale(1);
+      }
+
+      14% {
+        transform: scale(1.2);
+      }
+
+      28% {
+        transform: scale(1);
+      }
+
+      42% {
+        transform: scale(1.12);
+      }
+
+      56% {
+        transform: scale(1);
+      }
+    }
+
+    .s-love .love-heading {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.8rem, 10vw, 5.5rem);
+      font-weight: 600;
+      font-style: italic;
+      margin-top: 8px;
+      background: linear-gradient(135deg, var(--rose-light), #fff, var(--rose-light), var(--gold-light));
+      background-size: 300% 100%;
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: shineText 5s ease infinite;
+    }
+
+    @keyframes shineText {
+      0% {
+        background-position: 0% 50%
+      }
+
+      50% {
+        background-position: 100% 50%
+      }
+
+      100% {
+        background-position: 0% 50%
+      }
+    }
+
+    .s-love .love-sub {
+      font-size: 1rem;
+      color: rgba(255, 255, 255, .4);
+      margin-top: 10px;
+      font-style: italic;
+    }
+
+    .s-love .line {
+      width: 50px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--rose), transparent);
+      margin: 20px auto 0;
+    }
+
+    /* ───── Section 3 — Poem ───── */
+    .s-poem .inner {
+      text-align: center;
+      max-width: 480px;
+    }
+
+    .s-poem .poem-label {
+      font-size: .75rem;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 20px;
+    }
+
+    .s-poem .poem-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.15rem, 3.5vw, 1.5rem);
+      font-weight: 400;
+      line-height: 2;
+      color: rgba(255, 255, 255, .8);
+    }
+
+    .s-poem .poem-text .hl {
+      color: var(--rose-light);
+      font-weight: 600;
+      font-style: italic;
+    }
+
+    .s-poem .poem-deco {
+      margin-top: 24px;
+      font-size: 1.4rem;
+      color: rgba(255, 255, 255, .15);
+      letter-spacing: 12px;
+    }
+
+    /* ───── Section 4 — Reasons ───── */
+    .s-reasons .inner {
+      text-align: center;
+      width: 100%;
+      max-width: 440px;
+    }
+
+    .s-reasons .reasons-heading {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.8rem, 5vw, 2.8rem);
+      font-weight: 600;
+      font-style: italic;
+      color: var(--cream);
+      margin-bottom: 32px;
+    }
+
+    .reason-list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      text-align: left;
+    }
+
+    .reason-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      padding: 18px 20px;
+      border-radius: 16px;
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      backdrop-filter: blur(14px);
+      opacity: 0;
+      transform: translateX(-20px);
+      transition: opacity .6s ease, transform .6s ease;
+    }
+
+    .reason-item.visible {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .reason-item .r-icon {
+      font-size: 1.5rem;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .reason-item .r-text {
+      font-size: .95rem;
+      color: rgba(255, 255, 255, .75);
+      line-height: 1.55;
+    }
+
+    /* ───── Section 5 — Final ───── */
+    .s-final .inner {
+      text-align: center;
+    }
+
+    .s-final .final-heading {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2rem, 6vw, 3.2rem);
+      font-weight: 600;
+      font-style: italic;
+      color: var(--cream);
+      margin-bottom: 28px;
+    }
+
+    .photo-wrap {
+      position: relative;
+      max-width: 320px;
+      width: 88%;
+      margin: 0 auto;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, .4), 0 0 0 1px rgba(255, 255, 255, .08);
+      animation: photoFloat 5s ease-in-out infinite;
+    }
+
+    @keyframes photoFloat {
+
+      0%,
+      100% {
+        transform: translateY(0) rotate(0deg);
+      }
+
+      50% {
+        transform: translateY(-8px) rotate(.5deg);
+      }
+    }
+
+    .photo-wrap img {
+      width: 100%;
+      display: block;
+    }
+
+    .photo-wrap::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(232, 69, 107, .08) 0%, transparent 40%, rgba(26, 10, 16, .5) 100%);
+      pointer-events: none;
+    }
+
+    .s-final .final-text {
+      margin-top: 30px;
+      font-size: 1rem;
+      color: rgba(255, 255, 255, .5);
+      line-height: 1.8;
+      max-width: 350px;
+    }
+
+    .s-final .final-text b {
+      color: var(--rose-light);
+      font-weight: 600;
+    }
+
+    .s-final .final-name {
+      margin-top: 24px;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.2rem, 3.5vw, 1.7rem);
+      font-style: italic;
+      color: var(--gold-light);
+      opacity: .7;
+    }
+
+    /* ───── Music button ───── */
+    .music-btn {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 200;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, .12);
+      background: rgba(26, 10, 16, .6);
+      backdrop-filter: blur(16px);
+      color: var(--blush);
+      font-size: 20px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all .3s;
+      box-shadow: 0 4px 24px rgba(0, 0, 0, .3);
+    }
+
+    .music-btn:active {
+      transform: scale(.9);
+    }
+
+    .music-btn.playing {
+      border-color: var(--rose);
+      box-shadow: 0 4px 24px var(--rose-glow);
+      animation: mPulse 2s ease-in-out infinite;
+    }
+
+    @keyframes mPulse {
+
+      0%,
+      100% {
+        box-shadow: 0 4px 24px rgba(232, 69, 107, .15);
+      }
+
+      50% {
+        box-shadow: 0 4px 32px rgba(232, 69, 107, .4);
+      }
+    }
+
+    /* ───── Heart rain ───── */
+    .heart-rain {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 10;
+      display: none;
+    }
+
+    .heart-rain.active {
+      display: block;
+    }
+
+    .heart-rain .hr {
+      position: absolute;
+      top: -40px;
+      animation: hRain linear forwards;
+    }
+
+    @keyframes hRain {
+      0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 1;
+      }
+
+      100% {
+        transform: translateY(110vh) rotate(540deg);
+        opacity: 0;
+      }
+    }
+
+    /* ───── Sparkles ───── */
+    .sparkle {
+      position: fixed;
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 100;
+      animation: sparkOut .6s ease forwards;
+    }
+
+    @keyframes sparkOut {
+      0% {
+        transform: scale(1);
+        opacity: 1;
+      }
+
+      100% {
+        transform: scale(0);
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ambient glow -->
+  <div class="ambient amb1"></div>
+  <div class="ambient amb2"></div>
+  <div class="ambient amb3"></div>
+
+  <!-- petals canvas -->
+  <canvas id="petalsCanvas"></canvas>
+
+  <!-- audio -->
+  <audio id="bgMusic" loop preload="auto">
+    <source src="music.mp3" type="audio/mpeg">
+  </audio>
+
+  <!-- music toggle -->
+  <button class="music-btn" id="musicBtn" onclick="toggleMusic()" aria-label="Музыка">🎵</button>
+
+  <!-- ═══ Section 1 — Welcome ═══ -->
+  <section class="section s-welcome visible" id="s1">
+    <div class="inner">
+      <div class="greeting">Мой любимый<br><em>Линчик</em> ❤️</div>
+      <div class="sub">у меня есть кое-что для тебя</div>
+      <button class="btn" onclick="navigate('s2')">Нажми сюда 💌</button>
+    </div>
+  </section>
+
+  <!-- ═══ Section 2 — I Love You ═══ -->
+  <section class="section s-love" id="s2">
+    <div class="inner">
+      <div class="heart-icon">❤️</div>
+      <div class="love-heading">Я Люблю Тебя,<br>Принцесса</div>
+      <div class="line"></div>
+      <div class="love-sub">больше, чем слова могут выразить</div>
+      <button class="btn" onclick="navigate('s3')" style="margin-top:44px;">Нажми сюда 🌹</button>
+    </div>
+  </section>
+
+  <!-- ═══ Section 3 — Poem ═══ -->
+  <section class="section s-poem" id="s3">
+    <div class="inner">
+      <div class="poem-label">✦ для тебя ✦</div>
+      <div class="poem-text">
+        <span class="hl">Любимая</span>, ты — причина<br>
+        моей улыбки каждый день.<br><br>
+        Каждый момент с тобой —<br>
+        как <span class="hl">прекрасный</span> сон,<br>
+        от которого я не хочу<br>
+        просыпаться.<br><br>
+        Ты делаешь мой мир <span class="hl">ярче</span>,<br>
+        моё сердце <span class="hl">теплее</span>,<br>
+        а мою жизнь — <span class="hl">полной</span>.
+      </div>
+      <div class="poem-deco">· · ·</div>
+      <button class="btn" onclick="navigate('s4')" style="margin-top:36px;">Это ещё не всё ✨</button>
+    </div>
+  </section>
+
+  <!-- ═══ Section 4 — Reasons ═══ -->
+  <section class="section s-reasons" id="s4">
+    <div class="inner">
+      <div class="reasons-heading">За что я люблю<br>тебя, Китик</div>
+      <div class="reason-list" id="reasonList">
+        <div class="reason-item"><span class="r-icon">✨</span>
+          <p class="r-text">Твоя улыбка освещает весь мой мир</p>
+        </div>
+        <div class="reason-item"><span class="r-icon">🦋</span>
+          <p class="r-text">Рядом с тобой у меня бабочки в животе</p>
+        </div>
+        <div class="reason-item"><span class="r-icon">🌙</span>
+          <p class="r-text">Ты — моя последняя мысль перед сном и первая при пробуждении</p>
+        </div>
+        <div class="reason-item"><span class="r-icon">🤍</span>
+          <p class="r-text">Твоя нежность и доброта делают меня лучше</p>
+        </div>
+        <div class="reason-item"><span class="r-icon">🏡</span>
+          <p class="r-text">С тобой в любом месте — как дома</p>
+        </div>
+      </div>
+      <button class="btn" onclick="navigate('s5')" style="margin-top:36px;">И последнее 💝</button>
+    </div>
+  </section>
+
+  <!-- ═══ Section 5 — Final ═══ -->
+  <section class="section s-final" id="s5">
+    <div class="inner">
+      <div class="final-heading">Ты — Моё Всё</div>
+      <div class="photo-wrap">
+        <img src="photo.png" alt="Мы">
+      </div>
+      <p class="final-text">
+        Спасибо, что ты рядом, <b>Линчик</b>.<br>
+        Я самый счастливый человек на свете,<br>
+        потому что ты — моя. 💕
+      </p>
+      <div class="final-name">— навсегда твой —</div>
+    </div>
+  </section>
+
+  <!-- heart rain overlay -->
+  <div class="heart-rain" id="heartRain"></div>
+
+  <script>
+    /* ═══════════════════════════════
+       Falling Petals — Canvas
+       ═══════════════════════════════ */
+    const canvas = document.getElementById('petalsCanvas');
+    const ctx = canvas.getContext('2d');
+    let petals = [];
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    class Petal {
+      constructor() { this.reset(true); }
+      reset(init) {
+        this.x = Math.random() * canvas.width;
+        this.y = init ? Math.random() * canvas.height : -20;
+        this.size = 6 + Math.random() * 10;
+        this.speedY = .3 + Math.random() * .7;
+        this.speedX = -.2 + Math.random() * .4;
+        this.rotation = Math.random() * Math.PI * 2;
+        this.rotSpeed = (Math.random() - .5) * .02;
+        this.opacity = .12 + Math.random() * .18;
+        // petal color
+        const hues = [345, 350, 355, 0, 5, 10, 330];
+        this.hue = hues[Math.floor(Math.random() * hues.length)];
+        this.sat = 60 + Math.random() * 30;
+        this.light = 55 + Math.random() * 20;
+        this.wobble = Math.random() * Math.PI * 2;
+        this.wobbleSpeed = .01 + Math.random() * .02;
+      }
+      update() {
+        this.wobble += this.wobbleSpeed;
+        this.x += this.speedX + Math.sin(this.wobble) * .3;
+        this.y += this.speedY;
+        this.rotation += this.rotSpeed;
+        if (this.y > canvas.height + 20) this.reset(false);
+      }
+      draw() {
+        ctx.save();
+        ctx.translate(this.x, this.y);
+        ctx.rotate(this.rotation);
+        ctx.globalAlpha = this.opacity;
+        ctx.fillStyle = `hsl(${this.hue}, ${this.sat}%, ${this.light}%)`;
+        // petal shape
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.bezierCurveTo(this.size / 2, -this.size, this.size, -this.size / 2, 0, this.size);
+        ctx.bezierCurveTo(-this.size, -this.size / 2, -this.size / 2, -this.size, 0, 0);
+        ctx.fill();
+        ctx.restore();
+      }
+    }
+
+    for (let i = 0; i < 30; i++) petals.push(new Petal());
+
+    function animPetals() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      for (const p of petals) { p.update(); p.draw(); }
+      requestAnimationFrame(animPetals);
+    }
+    animPetals();
+
+    /* ═══════════════════════════════
+       Scroll reveal
+       ═══════════════════════════════ */
+    const sectObserver = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.2 });
+    document.querySelectorAll('.section').forEach(s => {
+      if (!s.classList.contains('visible')) sectObserver.observe(s);
+    });
+
+    /* reason cards stagger */
+    const listObs = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.querySelectorAll('.reason-item').forEach((c, i) => {
+            setTimeout(() => c.classList.add('visible'), i * 200);
+          });
+          listObs.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.15 });
+    listObs.observe(document.getElementById('reasonList'));
+
+    /* ═══════════════════════════════
+       Navigation + effects
+       ═══════════════════════════════ */
+    function navigate(id) {
+      const btn = event.currentTarget;
+      sparkles(btn);
+      if (navigator.vibrate) navigator.vibrate(25);
+      // auto music on first tap
+      if (!musicPlaying) toggleMusic();
+      setTimeout(() => {
+        document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+      }, 250);
+      if (id === 's5') setTimeout(triggerHeartRain, 800);
+    }
+
+    function sparkles(el) {
+      const r = el.getBoundingClientRect();
+      const cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+      const cols = ['#e8456b', '#ff7e9d', '#ffd6e0', '#d4a853', '#fff'];
+      for (let i = 0; i < 16; i++) {
+        const s = document.createElement('div');
+        s.className = 'sparkle';
+        const a = (Math.PI * 2 / 16) * i;
+        const d = 35 + Math.random() * 55;
+        s.style.left = (cx + Math.cos(a) * d) + 'px';
+        s.style.top = (cy + Math.sin(a) * d) + 'px';
+        s.style.background = cols[Math.floor(Math.random() * cols.length)];
+        s.style.width = s.style.height = (3 + Math.random() * 4) + 'px';
+        document.body.appendChild(s);
+        setTimeout(() => s.remove(), 600);
+      }
+    }
+
+    function triggerHeartRain() {
+      const c = document.getElementById('heartRain');
+      c.classList.add('active');
+      const syms = ['❤️', '💖', '💗', '💕', '💝', '🩷', '🤍'];
+      for (let i = 0; i < 45; i++) {
+        const h = document.createElement('span');
+        h.className = 'hr';
+        h.textContent = syms[Math.floor(Math.random() * syms.length)];
+        h.style.left = Math.random() * 100 + '%';
+        h.style.fontSize = (14 + Math.random() * 22) + 'px';
+        h.style.animationDuration = (2.5 + Math.random() * 3) + 's';
+        h.style.animationDelay = (Math.random() * 2.5) + 's';
+        c.appendChild(h);
+      }
+      setTimeout(() => { c.classList.remove('active'); c.innerHTML = ''; }, 7000);
+    }
+
+    /* ═══════════════════════════════
+       Music — plays user's music.mp3
+       ═══════════════════════════════ */
+    let musicPlaying = false;
+    const audio = document.getElementById('bgMusic');
+    audio.volume = 0.5;
+
+    function toggleMusic() {
+      const btn = document.getElementById('musicBtn');
+      if (!musicPlaying) {
+        audio.play().then(() => {
+          musicPlaying = true;
+          btn.classList.add('playing');
+          btn.textContent = '🎶';
+        }).catch(() => {
+          // no music file yet, silently ignore
+          musicPlaying = true;
+          btn.classList.add('playing');
+          btn.textContent = '🎶';
+        });
+      } else {
+        audio.pause();
+        musicPlaying = false;
+        btn.classList.remove('playing');
+        btn.textContent = '🎵';
+      }
+    }
+  </script>
+</body>
+
+</html>
